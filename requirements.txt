@@ -1,2 +1,7 @@
 fastapi
 uvicorn
+transformers
+psycopg2-binary
+sqlalchemy
+sqlalchemy-cockroachdb
+asyncpg

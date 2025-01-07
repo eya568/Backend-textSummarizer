@@ -1,7 +1,11 @@
 from fastapi import APIRouter
+from app.application.summarizer import Summarizer
+from app.domain.entities import Text
 
 router = APIRouter()
+summarizer = Summarizer()
 
-@router.get("/message")
-async def get_message():
-    return {"message": "Hello, this is a simple message!"}
+@router.post("/summarize")
+async def summarize_text(text: Text):
+    summary = summarizer.summarize(text.content)
+    return {"summary": summary}

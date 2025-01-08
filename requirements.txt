@@ -8,3 +8,5 @@ asyncpg
 fastapi
 pyjwt
 passlib[bcrypt]
+python-dotenv
+

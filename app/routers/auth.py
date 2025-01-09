@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter,HTTPException,status
 from datetime import timedelta
 from app.domain.data.models import SessionLocal, User
 from passlib.context import CryptContext
@@ -35,7 +35,11 @@ async def login_user(user: LoginRequest):
         # Verify user
         db_user = db.query(User).filter(User.email == user.email).first()
         if not db_user or not pwd_context.verify(user.password, db_user.password):
-            return {"status": "Failed", "error": "Invalid credentials"}
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
 
         # Create JWT token
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -43,8 +47,13 @@ async def login_user(user: LoginRequest):
             data={"sub": db_user.email}, expires_delta=access_token_expires
         )
         return {"access_token": access_token, "token_type": "bearer"}
+    except HTTPException as e:
+        raise e
     except Exception as e:
-        return {"status": "Failed", "error": str(e)}
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
     finally:
         db.close()
 @router.get("/accounts", response_model=List[dict])

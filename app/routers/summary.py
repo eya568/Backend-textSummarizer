@@ -19,3 +19,28 @@ async def add_summary(summary: SummaryCreateRequest):
         return {"status": "Failed to add summary", "error": str(e)}
     finally:
         db.close()
+
+@router.get("/get-summary/{summary_id}")
+async def get_summary(summary_id: int):
+    db = SessionLocal()
+    try:
+        db_summary = db.query(Summary).filter(Summary.id == summary_id).first()
+        if db_summary:
+            return {"status": "Summary retrieved successfully", "summary": db_summary}
+        else:
+            return {"status": "Summary not found"}
+    except Exception as e:
+        return {"status": "Failed to retrieve summary", "error": str(e)}
+    finally:
+        db.close()
+
+@router.get("/get-summaries")
+async def get_summaries():
+    db = SessionLocal()
+    try:
+        db_summaries = db.query(Summary).all()
+        return {"status": "Summaries retrieved successfully", "summaries": db_summaries}
+    except Exception as e:
+        return {"status": "Failed to retrieve summaries", "error": str(e)}
+    finally:
+        db.close()

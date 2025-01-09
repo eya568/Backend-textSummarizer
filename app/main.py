@@ -1,7 +1,7 @@
 from math import floor
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import message, auth, register, summary
+from app.routers import message, auth, register, summary,resetPassword
 
 
 
@@ -20,6 +20,7 @@ app.add_middleware(
 )
 app.include_router(message.router)
 app.include_router(auth.router)
+app.include_router(resetPassword.router)
 app.include_router(register.router)
 app.include_router(summary.router)
 

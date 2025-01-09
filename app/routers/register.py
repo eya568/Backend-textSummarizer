@@ -14,10 +14,13 @@ def get_password_hash(password):
 @router.post("/register")
 async def register_user(user: RegisterRequest):
     db = SessionLocal()
+    
     try:
+        
         # Check if email already exists
         existing_user = db.query(User).filter(User.email == user.email).first()
         if existing_user:
+            print(user.email)
             return {"status": "Failed to register user", "error": "Email already exists"}
 
         # Hash the password

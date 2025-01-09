@@ -3,8 +3,9 @@ from datetime import timedelta
 from app.domain.data.models import SessionLocal, User
 from passlib.context import CryptContext
 import jwt
-from pydantic import BaseModel
+
 from app.application.dtos.login_request import LoginRequest
+from typing import List
 
 from datetime import datetime, timedelta
 # JWT configuration
@@ -42,6 +43,27 @@ async def login_user(user: LoginRequest):
             data={"sub": db_user.email}, expires_delta=access_token_expires
         )
         return {"access_token": access_token, "token_type": "bearer"}
+    except Exception as e:
+        return {"status": "Failed", "error": str(e)}
+    finally:
+        db.close()
+@router.get("/accounts", response_model=List[dict])
+async def get_all_accounts():
+    db = SessionLocal()
+    try:
+        # Query all users from the database
+        users = db.query(User).all()
+
+        # Return a list of user data (excluding sensitive information)
+        user_list = [
+            {
+                "id": user.id,
+                "email": user.email,
+                "full_name": user.full_name,  # Include relevant fields
+            }
+            for user in users
+        ]
+        return user_list
     except Exception as e:
         return {"status": "Failed", "error": str(e)}
     finally:

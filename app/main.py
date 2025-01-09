@@ -6,14 +6,14 @@ from app.routers import message, auth, register, summary
 
 
 # Directly use os to get the database URL
-database_url = "postgresql://postgres:admin@localhost:5432/postgres"
+database_url = "postgresql://postgres:soyed@localhost:5432/postgres"
 
 app = FastAPI()
 
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Allow your frontend origin
+     allow_origins=["*"],  # Allow your frontend origin
     allow_credentials=True,
     allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
     allow_headers=["*"],  # Allow all headers

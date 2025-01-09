@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 # SQLAlchemy setup
 Base = declarative_base()
 
-database_url = "postgresql://postgres:admin@localhost:5432/postgres"
+database_url = "postgresql://postgres:soyed@localhost:5432/postgres"
 engine = create_engine(database_url)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

@@ -9,4 +9,3 @@ fastapi
 pyjwt
 passlib[bcrypt]
 python-dotenv
-

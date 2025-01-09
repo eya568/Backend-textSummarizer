@@ -41,21 +41,25 @@ async def login_user(user: LoginRequest):
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-        # Create JWT token
+        # Create JWT token with user ID and email
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
-            data={"sub": db_user.email}, expires_delta=access_token_expires
+            data={
+                "sub": db_user.email, 
+                "user_id": db_user.id
+            }, 
+            expires_delta=access_token_expires
         )
-        return {"access_token": access_token, "token_type": "bearer"}
+        return {
+            "access_token": access_token, 
+            "token_type": "bearer",
+            "user_id": db_user.id
+        }
     except HTTPException as e:
         raise e
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
-        )
     finally:
         db.close()
+
 @router.get("/accounts", response_model=List[dict])
 async def get_all_accounts():
     db = SessionLocal()

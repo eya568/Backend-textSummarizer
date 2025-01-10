@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Query
 from app.domain.data.models import SessionLocal, Summary
 from app.application.dtos.summary_request import SummaryCreateRequest
 
@@ -35,10 +35,14 @@ async def get_summary(summary_id: int):
         db.close()
 
 @router.get("/get-summaries")
-async def get_summaries():
+async def get_summaries(user_id: int = Query(..., description="User ID to filter summaries")):
+    """
+    Retrieve summaries filtered by the user ID.
+    """
     db = SessionLocal()
     try:
-        db_summaries = db.query(Summary).all()
+        # Filter summaries by the provided user_id
+        db_summaries = db.query(Summary).filter(Summary.user_id == user_id).all()
         return {"status": "Summaries retrieved successfully", "summaries": db_summaries}
     except Exception as e:
         return {"status": "Failed to retrieve summaries", "error": str(e)}

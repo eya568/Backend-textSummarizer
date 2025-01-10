@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+transformers
+psycopg2-binary
+sqlalchemy
+sqlalchemy-cockroachdb
+asyncpg
+fastapi
+pyjwt
+passlib[bcrypt]
+python-dotenv

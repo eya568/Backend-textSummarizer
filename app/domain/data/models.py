@@ -1,4 +1,5 @@
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, DateTime
+from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -25,6 +26,8 @@ class Summary(Base):
     user_id = Column(Integer, index=True)
     content = Column(String)
     image = Column(String)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
 
 
 

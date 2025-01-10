@@ -1,29 +1,18 @@
-# Use Python 3.9 slim image as base
+# backend/Dockerfile
+
 FROM python:3.11.4
 
-# Set working directory
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+# Copier les fichiers de dépendances dans l'image Docker
+COPY requirements.txt /app/
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy requirements file
-COPY requirements.txt .
-
-# Install Python dependencies
+# Installer les dépendances Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project files
-COPY . .
+# Copier tous les fichiers backend dans l'image
+COPY . /app/
 
-# Expose port
-EXPOSE 8000
-
-# Command to run the application
+# Commande pour lancer FastAPI
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
